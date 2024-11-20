@@ -6,9 +6,10 @@ import Previews from "./Previews";
 import { useBoard } from "../hooks/useBoard";
 import { useGameStats } from "../hooks/useGameStats";
 import { usePlayer } from "../hooks/usePlayer";
+import { useLevel } from "../hooks/useLevel";
 
 const Tetris = ({ rows, columns, setGameOver }) => {
-  const [gameStats, addLinesCleared] = useGameStats();
+  const [gameStats, addLinesCleared] = useGameStats(useLevel.initialLevel);
   const [player, setPlayer, resetPlayer] = usePlayer();
   const [board, setBoard] = useBoard({
     rows,

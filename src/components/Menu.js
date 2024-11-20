@@ -1,46 +1,89 @@
+import useLevel from '../hooks/useLevel';
+import { useState } from 'react';
 
+const Menu = ({ onClick }) => {
+  const [initialLevel, setInitialLevel] = useState(useLevel.initialLevel);
+  const [expertLevel, setExpertLevel] = useState(useLevel.expertLevel);
 
-const Menu = ({ onClick }) => (
-  <>
-  <div className="Menu">
-   
-<body class="bg-gray-900 text-gray-100 flex items-center justify-center min-h-screen">
-  <div class="bg-gray-800 rounded-lg shadow-lg p-6 w-full min-w-[200%] max-w-lg min-h-[2rem]">
- 
-    <button class="w-full bg-gray-400 hover:bg-gray-300 text-gray-800 font-medium py-3 rounded-md text-lg mb-6" onClick={onClick}>
-      New game
-    </button>
+  const handleInitialLevelChange = (e) => {
+    const value = Number(e.target.value);
+    setInitialLevel(value);
+    useLevel.setInitialLevel(value); 
+  };
 
+  const handleExpertLevelChange = (e) => {
+    const value = Number(e.target.value);
+    setExpertLevel(value); 
+    useLevel.setExpertLevel(value); 
+  };
 
-    <div class="space-y-6">
-    
-      <div>
-        <label for="initial-level" class="block text-left text-sm font-medium mb-1">Initial level</label>
-        <div class="flex items-center justify-between">
-          <input type="range" id="initial-level" min="1" max="10" value="3" class="w-3/4 accent-yellow-400"/>
-          <span class="ml-4 text-yellow-400 font-semibold">1</span>
-        </div>
-      </div>
+  return (
+    <div className="Menu">
+      <div className="bg-gray-900 text-gray-100 flex items-center justify-center min-h-screen min-w-screen">
+        <div className="bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-lg">
+          <button
+            className="w-full bg-gray-400 hover:bg-gray-300 text-gray-800 font-medium py-3 rounded-md text-lg mb-6"
+            onClick={onClick}
+          >
+            New game
+          </button>
 
-      <div>
-        <label for="initial-rows" class="block text-left text-sm font-medium mb-1">Expert Level</label>
-        <div class="flex items-center justify-between">
-          <input type="range" id="initial-rows" min="1" max="10" value="5" class="w-3/4 accent-yellow-400"/>
-          <span class="ml-4 text-yellow-400 font-semibold">5</span>
+          <div className="space-y-6">
+            <div>
+              <label
+                htmlFor="initial-level"
+                className="block text-left text-sm font-medium mb-1"
+              >
+                Initial level
+              </label>
+              <div className="flex items-center justify-between">
+                <input
+                  type="range"
+                  id="initial-level"
+                  min="1"
+                  max="10"
+                  value={initialLevel}
+                  className="w-3/4 accent-yellow-400"
+                  onChange={handleInitialLevelChange} 
+                />
+                <span className="ml-4 text-yellow-400 font-semibold">
+                  {initialLevel}
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="expert-level"
+                className="block text-left text-sm font-medium mb-1"
+              >
+                Expert Level
+              </label>
+              <div className="flex items-center justify-between">
+                <input
+                  type="range"
+                  id="expert-level"
+                  min="1"
+                  max="10"
+                  value={expertLevel}
+                  className="w-3/4 accent-yellow-400"
+                  onChange={handleExpertLevelChange} 
+                />
+                <span className="ml-4 text-yellow-400 font-semibold">
+                  {expertLevel}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 text-center">
+            <p className="text-sm">Your score</p>
+            <p className="text-4xl text-yellow-400 font-bold mt-2">0000</p>
+          </div>
         </div>
       </div>
     </div>
-
-    <div class="mt-8 text-center">
-      <p class="text-sm">Your score</p>
-      <p class="text-4xl text-yellow-400 font-bold mt-2">0000</p>
-    </div>
-
-  </div>
-</body>
-  </div>
-
- </>
-);
+  );
+};
 
 export default Menu;
