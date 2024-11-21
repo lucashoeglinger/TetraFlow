@@ -1,17 +1,17 @@
 import { useState, useCallback } from "react";
-
+import useZen from "./useZen";
 import { randomTetromino } from "../utils/Tetrominoes";
 
-const buildPlayer = (previous) => {
+const buildPlayer = (previous, zenMode) => {
   let tetrominoes;
 
   if (previous) {
     tetrominoes = [...previous.tetrominoes];
-    tetrominoes.unshift(randomTetromino());
+    tetrominoes.unshift(randomTetromino(zenMode)); 
   } else {
     tetrominoes = Array(5)
       .fill(0)
-      .map((_) => randomTetromino());
+      .map(() => randomTetromino(zenMode));
   }
 
   return {
@@ -19,16 +19,17 @@ const buildPlayer = (previous) => {
     isFastDropping: false,
     position: { row: 0, column: 4 },
     tetrominoes,
-    tetromino: tetrominoes.pop()
+    tetromino: tetrominoes.pop(),
   };
 };
 
 export const usePlayer = () => {
-  const [player, setPlayer] = useState(buildPlayer());
+  const zenMode = useZen.zenMode; 
+  const [player, setPlayer] = useState(() => buildPlayer(null, zenMode));
 
   const resetPlayer = useCallback(() => {
-    setPlayer((prev) => buildPlayer(prev));
-  }, []);
+    setPlayer((prev) => buildPlayer(prev, zenMode));
+  }, [zenMode]);
 
   return [player, setPlayer, resetPlayer];
 };

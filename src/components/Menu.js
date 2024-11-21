@@ -1,10 +1,19 @@
 import useLevel from '../hooks/useLevel';
+import useZen from '../hooks/useZen';
 import { useState } from 'react';
 
 const Menu = ({ onClick }) => {
   const [initialLevel, setInitialLevel] = useState(useLevel.initialLevel);
   const [expertLevel, setExpertLevel] = useState(useLevel.expertLevel);
 
+  const [zenMode, setZenMode] = useState(useZen.zenMode);
+
+
+  const handleZenChange = (e) => {
+    const value = e.target.checked;
+    setZenMode(value);
+    useZen.setZenMode(value);
+  }
   const handleInitialLevelChange = (e) => {
     const value = Number(e.target.value);
     setInitialLevel(value);
@@ -29,6 +38,12 @@ const Menu = ({ onClick }) => {
           </button>
 
           <div className="space-y-6">
+            <div>
+            <label htmlFor="ZenMode" className="switch">
+            <input id="ZenMode" type="checkbox" onChange={handleZenChange}/>
+            <span className="slider round"></span>
+          </label>
+        </div>
             <div>
               <label
                 htmlFor="initial-level"

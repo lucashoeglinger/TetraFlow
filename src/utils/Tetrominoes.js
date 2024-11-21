@@ -1,6 +1,6 @@
 const className = "tetromino";
 
-export const TETROMINOES = {
+export const TETROMINOES = (zenMode) => ({
   I: {
     shape: [
       [0, 1, 0, 0],
@@ -8,7 +8,7 @@ export const TETROMINOES = {
       [0, 1, 0, 0],
       [0, 1, 0, 0]
     ],
-    className: `${className} ${className}__i`
+    className: zenMode ? `${className} ${className}__iz` : `${className} ${className}__i`
   },
   J: {
     shape: [
@@ -16,7 +16,7 @@ export const TETROMINOES = {
       [0, 1, 0],
       [1, 1, 0]
     ],
-    className: `${className} ${className}__j`
+    className: zenMode ? `${className} ${className}__jz` : `${className} ${className}__j`
   },
   L: {
     shape: [
@@ -24,14 +24,14 @@ export const TETROMINOES = {
       [0, 1, 0],
       [0, 1, 1]
     ],
-    className: `${className} ${className}__l`
+    className: zenMode ? `${className} ${className}__lz` : `${className} ${className}__l`
   },
   O: {
     shape: [
       [1, 1],
       [1, 1]
     ],
-    className: `${className} ${className}__o`
+    className: zenMode ? `${className} ${className}__oz` : `${className} ${className}__o`
   },
   S: {
     shape: [
@@ -39,7 +39,7 @@ export const TETROMINOES = {
       [1, 1, 0],
       [0, 0, 0]
     ],
-    className: `${className} ${className}__s`
+    className: zenMode ? `${className} ${className}__sz` : `${className} ${className}__s`
   },
   T: {
     shape: [
@@ -47,7 +47,7 @@ export const TETROMINOES = {
       [0, 1, 0],
       [0, 0, 0]
     ],
-    className: `${className} ${className}__t`
+    className: zenMode ? `${className} ${className}__tz` : `${className} ${className}__t`
   },
   Z: {
     shape: [
@@ -55,15 +55,16 @@ export const TETROMINOES = {
       [0, 1, 1],
       [0, 0, 0]
     ],
-    className: `${className} ${className}__z`
+    className: zenMode ? `${className} ${className}__zz` : `${className} ${className}__z`
   }
-};
+});
 
-export const randomTetromino = () => {
-  const keys = Object.keys(TETROMINOES);
+export const randomTetromino = (zenMode) => {
+  let tetrominoZen = TETROMINOES(zenMode)
+  const keys = Object.keys(tetrominoZen);
   const index = Math.floor(Math.random() * keys.length);
   const key = keys[index];
-  return TETROMINOES[key];
+  return tetrominoZen[key];
 };
 
 export const rotate = ({ piece, direction }) => {

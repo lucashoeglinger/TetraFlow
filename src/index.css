@@ -24,7 +24,6 @@
 
 .tetromino.ghost {
   background-color: transparent;
- 
 }
 
 .tetromino.ghost .Sparkle {
@@ -52,6 +51,30 @@
 .tetromino__z {
   background-color: rgba(240, 80, 195, 1);
 }
+
+/* Zen Mode Colors */
+.tetromino__iz {
+  background-color: rgba(168, 230, 207, 1);
+}
+.tetromino__jz {
+  background-color: rgba(166, 200, 230, 1);
+}
+.tetromino__lz {
+  background-color: rgba(255, 211, 182, 1);
+}
+.tetromino__oz {
+  background-color: rgba(255, 236, 179, 1);
+}
+.tetromino__sz {
+  background-color: rgba(212, 225, 87, 1);
+}
+.tetromino__tz {
+  background-color: rgba(206, 147, 216, 1);
+}
+.tetromino__zz {
+  background-color: rgba(255, 171, 171, 1);
+}
+
 .Board {
   margin: 2em auto;
   display: grid;
@@ -133,4 +156,65 @@
   @apply grid grid-cols-4 gap-[1px] bg-gray-600 rounded-md;
   width: 100%;
   height: 100%;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #2196f3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }
