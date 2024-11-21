@@ -41,7 +41,7 @@ const Menu = ({ onClick }) => {
                   type="range"
                   id="initial-level"
                   min="1"
-                  max="10"
+                  max="29"
                   value={initialLevel}
                   className="w-3/4 accent-yellow-400"
                   onChange={handleInitialLevelChange} 

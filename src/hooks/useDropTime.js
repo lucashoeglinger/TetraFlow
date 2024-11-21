@@ -1,8 +1,8 @@
 import { useState, useCallback, useEffect } from "react";
 
 const defaultDropTime = 1000;
-const minimumDropTime = 100;
-const speedIncrement = 50;
+const minimumDropTime = 50;
+const speedIncrement = 100;
 
 export const useDropTime = ({ gameStats }) => {
   const [dropTime, setDropTime] = useState(defaultDropTime);
