@@ -41,7 +41,7 @@ const Menu = ({ onClick }) => {
             <div>
               <div className="mb-2">Activate ZenMode</div>
             <label htmlFor="ZenMode" className="switch">
-            <input id="ZenMode" type="checkbox" onChange={handleZenChange}/>
+            <input id="ZenMode" type="checkbox" defaultChecked={zenMode} onChange={handleZenChange}/>
             <span className="slider round"></span>
           </label>
         </div>
