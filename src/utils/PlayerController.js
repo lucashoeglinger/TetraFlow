@@ -92,7 +92,7 @@ export const playerController = ({
   board,
   player,
   setPlayer,
-  setGameOver
+  setGameOver,
 }) => {
   if (!action) return;
 
