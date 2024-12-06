@@ -4,24 +4,18 @@ import { playerController } from "../utils/PlayerController";
 
 import { useDropTime } from "../hooks/useDropTime";
 import { useInterval } from "../hooks/useInterval";
-import {usePause} from "../hooks/usePause";
+import usePause from "../hooks/usePause";
 
-const GameController = ({
-  board,
-  gameStats,
-  player,
-  setGameOver,
-  setPlayer
-}) => {
-  const [dropTime, pauseDropTime, resumeDropTime] = useDropTime({
-    gameStats
-  });
-  const [pause, setPause] = useState(usePause.pause);
+const GameController = ({ board, gameStats, player, setGameOver, setPlayer }) => {
+  const [dropTime, pauseDropTime, resumeDropTime] = useDropTime({ gameStats });
+  const { pause, setPause, togglePause } = usePause();
   const [isFastDropping, setIsFastDropping] = useState(false);
 
   useInterval(() => {
+    if (!pause) {
       handleInput({ action: Action.SlowDrop });
-  }, isFastDropping ? 50 : dropTime);
+    }
+  }, isFastDropping ? 50 : dropTime || Infinity);
 
   const onKeyUp = ({ code }) => {
     const action = actionForKey(code);
@@ -34,15 +28,22 @@ const GameController = ({
   const onKeyDown = ({ code }) => {
     const action = actionForKey(code);
 
+    if (action === Action.Pause) {
+      togglePause();
+      if (!pause) {
+        pauseDropTime();
+      } else {
+        resumeDropTime();
+      }
+      return;
+    }
+
+    if (pause) {
+      return;
+    }
+
     if (action === Action.Quit) {
       setGameOver(true);
-    } else if(action === Action.Pause){
-      setPause(!pause);
-      console.log(pause);
-      if(pause === true){
-        pauseDropTime()
-      }
-        resumeDropTime();
     } else {
       if (actionIsDrop(action)) {
         pauseDropTime();
@@ -56,6 +57,7 @@ const GameController = ({
   };
 
   const handleInput = ({ action }) => {
+    if (pause) return;
     playerController({
       action,
       board,

@@ -14,7 +14,7 @@ export const Action = {
     ArrowLeft: Action.Left,
     ArrowRight: Action.Right,
     KeyQ: Action.Quit,
-    KeyP: Action.Pause,
+    Escape: Action.Pause,
     Space: Action.FastDrop,
   };
   

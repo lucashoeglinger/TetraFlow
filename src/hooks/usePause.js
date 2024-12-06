@@ -1,8 +1,12 @@
-export const usePause =  {
-    pause: false,
+import { useContext } from "react";
+import { PauseContext } from "./PauseContext";
 
-    setPause(value){
-        this.pause = value
-    }
-}
+const usePause = () => {
+  const context = useContext(PauseContext);
+  if (!context) {
+    throw new Error("usePause must be used within a PauseProvider");
+  }
+  return context;
+};
+
 export default usePause;

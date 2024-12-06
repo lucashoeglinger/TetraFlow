@@ -1,11 +1,22 @@
+import React from "react";
+import { usePause } from "../hooks/PauseContext";
+
 const Pause = () => {
-    return (
-      <div className="PauseScreen">
-        <h1>Game Paused</h1>
-        <p>Press resume to continue</p>
+  const { togglePause } = usePause();
+
+  return (
+    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-75 z-50">
+      <div className="text-center">
+        <h1 className="text-4xl text-white mb-4">Game Paused</h1>
+        <button
+          onClick={togglePause}
+          className="bg-yellow-400 text-black px-6 py-2 rounded-lg hover:bg-yellow-500"
+        >
+          Resume
+        </button>
       </div>
-    );
-  };
-  
-  export default Pause;
-  
+    </div>
+  );
+};
+
+export default Pause;
