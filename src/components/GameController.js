@@ -11,6 +11,9 @@ const GameController = ({ board, gameStats, player, setGameOver, setPlayer }) =>
   const { pause, setPause, togglePause } = usePause();
   const [isFastDropping, setIsFastDropping] = useState(false);
 
+
+  console.log(dropTime)
+
   useInterval(() => {
     if (!pause) {
       handleInput({ action: Action.SlowDrop });

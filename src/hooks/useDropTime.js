@@ -6,29 +6,33 @@ const speedIncrement = 100;
 
 export const useDropTime = ({ gameStats }) => {
   const [dropTime, setDropTime] = useState(defaultDropTime);
-  const [previousDropTime, setPreviousDropTime] = useState();
+  const [previousDropTime, setPreviousDropTime] = useState(null);
 
   const resumeDropTime = useCallback(() => {
-    if (!previousDropTime) {
-      return;
+    if (previousDropTime !== null) {
+      setDropTime(previousDropTime);
+      setPreviousDropTime(null);
+    } else {
+      const speed = speedIncrement * (gameStats.level - 1);
+      const newDropTime = Math.max(defaultDropTime - speed, minimumDropTime);
+      setDropTime(newDropTime);
     }
-    setDropTime(previousDropTime);
-    setPreviousDropTime(null);
-  }, [previousDropTime]);
+  }, [previousDropTime, gameStats.level]);
 
   const pauseDropTime = useCallback(() => {
-    if (dropTime) {
-      setPreviousDropTime(dropTime);
+    if (dropTime !== null) {
+      setPreviousDropTime(dropTime); 
+      setDropTime(null); 
     }
-    setDropTime(null);
-  }, [dropTime, setPreviousDropTime]);
+  }, [dropTime]);
 
   useEffect(() => {
-    const speed = speedIncrement * (gameStats.level - 1);
-    const newDropTime = Math.max(defaultDropTime - speed, minimumDropTime);
-
-    setDropTime(newDropTime);
-  }, [gameStats.level, setDropTime]);
+    if (dropTime !== null) {
+      const speed = speedIncrement * (gameStats.level - 1);
+      const newDropTime = Math.max(defaultDropTime - speed, minimumDropTime);
+      setDropTime(newDropTime);
+    }
+  }, [gameStats.level]);
 
   return [dropTime, pauseDropTime, resumeDropTime];
 };
