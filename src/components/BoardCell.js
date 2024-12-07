@@ -1,11 +1,15 @@
-const BoardCell = ({ cell }) => (
-  <div
-    className={`h-7 w-8 ${
-      cell.className ? cell.className : ""
-    } relative`}
-  >
-    <div className="absolute inset-0 bg-opacity-50 rounded-md"></div>
-  </div>
-);
+const BoardCell = ({ cell }) => {
+  const { className, color } = cell;
+
+  return (
+    <div
+      className={`BoardCell ${className || ""}`}
+      style={{
+        backgroundColor: color || "rgba(0, 0, 0, 0.1)", // Default empty cell color
+        border: className ? "1px solid rgba(0, 0, 0, 0.3)" : "none", // Border for Tetromino cells
+      }}
+    />
+  );
+};
 
 export default BoardCell;

@@ -22,19 +22,29 @@ const Tetris = ({ rows, columns, setGameOver }) => {
   });
 
   return (
-    <div className="relative flex justify-center items-center h-screen bg-gray-900">
-      <div className="grid grid-cols-3 gap-4">
-        <div className="col-span-1 flex flex-col items-center justify-center">
-          <h2 className="text-gray-200 text-4xl m-2">Next</h2>
+    <div className="Tetris h-screen w-full bg-gray-900 flex flex-col items-center justify-center">
+      <div className="game-grid grid grid-cols-[1fr_3fr_1fr] gap-8 items-center w-full max-w-6xl">
+        {/* Next Preview */}
+        <div className="next-preview flex flex-col items-center">
+          <h2 className="text-gray-200 text-xl mb-2">Next</h2>
           <Previews tetrominoes={player.tetrominoes} />
         </div>
-        <div className="col-span-1">
+
+        {/* Game Board */}
+        <div className="board-container flex justify-center">
           <Board board={board} />
         </div>
-        <div className="col-span-1 flex flex-col items-center justify-center">
-          <GameStats gameStats={gameStats} />
+
+        {/* Game Stats */}
+        <div className="game-stats flex flex-col items-center text-gray-200">
+          <div className="text-2xl mb-4">Score</div>
+          <div className="value text-3xl font-bold">{gameStats.points}</div>
+          <div className="text-2xl mt-4">Level</div>
+          <div className="value text-3xl font-bold">{gameStats.level}</div>
         </div>
       </div>
+
+      {/* Game Controller */}
       <GameController
         board={board}
         gameStats={gameStats}

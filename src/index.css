@@ -1,156 +1,323 @@
-.BoardCell {
-  width: auto;
-
-  position: relative;
+/* Tetris Container */
+.Tetris {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%; /* Ensures full height */
+  width: 100%;
+  background: #1a202c; /* Dark background */
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow: hidden; /* Prevent overflow */
 }
 
+.game-grid {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr; /* Layout for Preview, Board, Stats */
+  gap: 1rem; /* Space between items */
+  max-width: 100%; /* Prevent horizontal overflow */
+  align-items: center; /* Center items vertically */
+  justify-items: center; /* Center items horizontally */
+  box-sizing: border-box; /* Include padding and borders */
+}
+.next-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem; /* Add spacing between elements */
+}
+
+.next-preview h2 {
+  font-size: 1.5rem;
+  color: #cbd5e0; /* Light gray */
+  margin-bottom: 0.5rem;
+}
+
+.Preview {
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+  background: rgba(0, 0, 0, 0.1);
+  border: 5px solid #4a5568; /* Border around the preview box */
+  border-radius: 8px; /* Rounded corners */
+  width: 15vw; /* Default width */
+  height: 15vw; /* Maintain square aspect ratio */
+  max-width: 150px; /* Restrict maximum size */
+  max-height: 150px; /* Restrict maximum size */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Subtle shadow */
+}
+
+/* Game Stats Section */
+.game-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #fff;
+  gap: 1rem; /* Add spacing between elements */
+}
+
+.game-stats .value {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.game-stats .label {
+  font-size: 1rem;
+  color: #cbd5e0;
+}
+
+.board-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Board {
+  display: grid;
+  grid-template-rows: repeat(20, 1fr); 
+  grid-template-columns: repeat(10, 1fr); 
+  background: #2d3748; 
+  border: 10px solid #4a5568; 
+  border-radius: 8px; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); 
+  overflow: hidden; 
+  margin: auto;
+}
+
+
+
+/* BoardCell */
+.BoardCell {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.1); /* Default cell background */
+  position: relative;
+  box-sizing: border-box; /* Include borders in size calculation */
+}
+
+/* Tetromino Styling */
 .tetromino {
+  width: 100%;
+  height: 100%;
   border-top: 3px solid rgba(255, 255, 255, 0.1);
   border-left: 3px solid rgba(255, 255, 255, 0.1);
   border-bottom: 3px solid rgba(0, 0, 0, 0.1);
   border-right: 3px solid rgba(0, 0, 0, 0.1);
-}
-
-.tetromino .Sparkle {
-  position: absolute;
-  z-index: 10;
-  width: 6px;
-  height: 6px;
-  left: -2px;
-  top: -2px;
-  background-color: rgba(255, 255, 255, 0.4);
-  border-radius: 4px 4px;
+  box-sizing: border-box; /* Borders inside total dimensions */
 }
 
 .tetromino.ghost {
-  background-color: transparent;
+  background-color: transparent !important;
 }
 
-.tetromino.ghost .Sparkle {
-  opacity: 0;
-}
-
+/* Individual Tetromino Colors */
 .tetromino__i {
-  background-color: rgba(80, 227, 230, 1);
+  background-color: rgba(80, 227, 230, 1) !important;
 }
 .tetromino__j {
-  background-color: rgba(36, 95, 223, 1);
+  background-color: rgba(36, 95, 223, 1) !important;
 }
 .tetromino__l {
-  background-color: rgba(223, 173, 36, 1);
+  background-color: rgba(223, 173, 36, 1) !important;
 }
 .tetromino__o {
-  background-color: rgba(223, 217, 36, 1);
+  background-color: rgba(223, 217, 36, 1) !important;
 }
 .tetromino__s {
-  background-color: rgba(48, 211, 56, 1);
+  background-color: rgba(48, 211, 56, 1) !important;
 }
 .tetromino__t {
-  background-color: rgba(132, 61, 198, 1);
+  background-color: rgba(132, 61, 198, 1) !important;
 }
 .tetromino__z {
-  background-color: rgba(240, 80, 195, 1);
+  background-color: rgba(240, 80, 195, 1) !important;
 }
-
-/* Zen Mode Colors */
+/*Zen Mode Colors  */
 .tetromino__iz {
-  background-color: rgba(168, 230, 207, 1);
+  background-color: rgba(168, 230, 207, 1) !important;
 }
 .tetromino__jz {
-  background-color: rgba(166, 200, 230, 1);
+  background-color: rgba(166, 200, 230, 1) !important;
 }
 .tetromino__lz {
-  background-color: rgba(255, 211, 182, 1);
+  background-color: rgba(255, 211, 182, 1) !important;
 }
 .tetromino__oz {
-  background-color: rgba(255, 236, 179, 1);
+  background-color: rgba(255, 236, 179, 1) !important;
 }
 .tetromino__sz {
-  background-color: rgba(212, 225, 87, 1);
+  background-color: rgba(212, 225, 87, 1) !important;
 }
 .tetromino__tz {
-  background-color: rgba(206, 147, 216, 1);
+  background-color: rgba(206, 147, 216, 1) !important;
 }
 .tetromino__zz {
-  background-color: rgba(255, 171, 171, 1);
+  background-color: rgba(255, 171, 171, 1) !important;
 }
 
+/* Buttons */
 .Board {
-  margin: 2em auto;
   display: grid;
-  grid-gap: 2px;
-  width: 45vw;
-  height: 90vw;
-  background: rgb(32, 0, 64);
-  border: 10px solid rgb(32, 0, 64);
-  border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  grid-template-rows: repeat(20, 1fr); /* 20 rows */
+  grid-template-columns: repeat(10, 1fr); /* 10 columns */
+  background: #2d3748; /* Board background */
+  border: 10px solid #4a5568;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Add shadow */
+  overflow: hidden; /* Prevent Tetromino overflow */
+  margin: auto; /* Center the board */
+
+  width: calc(90vh / 2);
+  height: 90vh;
 }
-.GameController {
-  position: absolute;
-  top: -100em;
-}
-.GameStats {
-  position: absolute;
-  width: 22vw;
-  list-style-type: none;
-  color: rgba(255, 255, 255, 0.5);
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; 
 }
 
-.GameStats__left {
-  right: 0;
-  top: 22vh;
-  text-align: left;
+.Button:hover {
+  background-color: #2d3748;
 }
 
-.GameStats__right {
-  right: 0;
-  bottom: 0;
-  text-align: left;
+@media (max-width: 1024px) and (orientation: portrait) {
+  .Board {
+    width: 80vw; /* Scale based on width for portrait tablets */
+    height: calc(80vw * 2); /* Maintain aspect ratio */
+  }
+  .Preview {
+    width: 12vw; /* Scale down the preview */
+    height: 12vw;
+    max-width: 120px;
+    max-height: 120px;
+  }
+
+  .game-stats .value {
+    font-size: 1.2rem;
+  }
+
+  .game-stats .label {
+    font-size: 0.9rem;
+  }
 }
 
-.GameStats .value {
-  font-size: 2.8rem;
-  margin-bottom: 0.5em;
-  color: rgba(255, 255, 255, 1);
-}
-.Menu {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 50vh;
-  z-index: 100;
-  background-color: rgb(17 24 39 / var(--tw-bg-opacity, 1));
+/* Small screens (phones) */
+@media (max-width: 768px) and (orientation: portrait) {
+  .Board {
+    width: 70vw; /* Scale based on width for portrait phones */
+    height: calc(70vw * 2); /* Maintain aspect ratio */
+  }
+  .Preview {
+    width: 10vw; /* Further reduce size for small screens */
+    height: 10vw;
+    max-width: 100px;
+    max-height: 100px;
+  }
+
+  .game-stats .value {
+    font-size: 1rem;
+  }
+
+  .game-stats .label {
+    font-size: 0.8rem;
+  }
 }
 
-.Button {
-  padding: 40px 80px;
-  font-size: 2em;
-  border-radius: 20px;
-  border: none;
-  box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 60px;
-  cursor: pointer;
+/* Very small screens */
+@media (max-width: 480px) and (orientation: portrait) {
+  .Board {
+    width: 60vw; /* Scale further for small portrait phones */
+    height: calc(60vw * 2); /* Maintain aspect ratio */
+  }
+  .Preview {
+    width: 8vw; /* Make it even smaller */
+    height: 8vw;
+    max-width: 80px;
+    max-height: 80px;
+  }
+
+  .game-stats .value {
+    font-size: 0.9rem;
+  }
+
+  .game-stats .label {
+    font-size: 0.7rem;
+  }
 }
-.Preview {
-  position: absolute;
-  top: 0;
-  left: 72.2vw;
-  background: rgba(0, 0, 0, 0.1);
-  border: 10px solid rgba(0, 0, 0, 0);
-  border-radius: 10px;
+@media (max-width: 1024px) and (orientation: landscape) {
+  .Board {
+    width: calc(80vh / 2); /* Scale based on width for portrait tablets */
+    height: 80vh; /* Maintain aspect ratio */
+  }
+  .Preview {
+    width: 12vw; /* Scale down the preview */
+    height: 12vw;
+    max-width: 120px;
+    max-height: 120px;
+  }
+
+  .game-stats .value {
+    font-size: 1.2rem;
+  }
+
+  .game-stats .label {
+    font-size: 0.9rem;
+  }
 }
 
-.Preview-board {
-  display: grid;
-  grid-gap: 2px;
-  grid-template-rows: repeat(4, 1fr);
-  grid-template-columns: repeat(4, 1fr);
-  width: 11vw;
-  height: 11vw;
+/* Small screens (phones) */
+@media (max-width: 768px) and (orientation: landscape) {
+  .Board {
+    width: calc(70vh / 2); /* Scale based on width for portrait phones */
+    height: 70vh; /* Maintain aspect ratio */
+  }
+  .Preview {
+    width: 10vw; /* Further reduce size for small screens */
+    height: 10vw;
+    max-width: 100px;
+    max-height: 100px;
+  }
+
+  .game-stats .value {
+    font-size: 1rem;
+  }
+
+  .game-stats .label {
+    font-size: 0.8rem;
+  }
 }
-.Tetris {
-  position: relative;
+
+/* Very small screens */
+@media (max-width: 480px) and (orientation: portrait) {
+  .Board {
+    width: calc(60vh / 2); /* Scale further for small portrait phones */
+    height: 60vh; /* Maintain aspect ratio */
+  }
+  .Preview {
+    width: 8vw; /* Make it even smaller */
+    height: 8vw;
+    max-width: 80px;
+    max-height: 80px;
+  }
+
+  .game-stats .value {
+    font-size: 0.9rem;
+  }
+
+  .game-stats .label {
+    font-size: 0.7rem;
+  }
 }
+
+
 /* Preview.module.css */
 .preview-board {
   @apply grid grid-cols-4 gap-[1px] bg-gray-600 rounded-md;
