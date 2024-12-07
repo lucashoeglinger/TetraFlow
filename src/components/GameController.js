@@ -64,11 +64,9 @@ const GameController = ({ board, gameStats, player, setGameOver, setPlayer }) =>
   };
 
   useEffect(() => {
-    // Add global event listeners for keydown and keyup
     document.addEventListener("keydown", onKeyDown);
     document.addEventListener("keyup", onKeyUp);
 
-    // Cleanup event listeners on unmount
     return () => {
       document.removeEventListener("keydown", onKeyDown);
       document.removeEventListener("keyup", onKeyUp);

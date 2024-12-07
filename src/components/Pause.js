@@ -14,8 +14,6 @@ const Pause = () => {
     });
     
     document.dispatchEvent(event);
-
-    console.log(event)
   };
 
   return (
