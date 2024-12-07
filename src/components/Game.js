@@ -2,7 +2,7 @@ import Menu from "./Menu";
 import Tetris from "./Tetris";
 import Pause from "./Pause";
 import { useGameOver } from "../hooks/useGameOver";
-import { usePause } from "../hooks/PauseContext";
+import { usePause } from "../contexts/PauseContext";
 
 const Game = ({ rows, columns }) => {
   const [gameOver, setGameOver, resetGameOver] = useGameOver();

@@ -1,7 +1,7 @@
 import "./index.css";
 import "./tailwind.css"
 import Game from ".//components/Game";
-import { PauseProvider } from "./hooks/PauseContext";
+import { PauseProvider } from "./contexts/PauseContext";
 
 export default function App() {
   return (

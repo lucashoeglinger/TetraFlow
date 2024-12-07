@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { PauseContext } from "./PauseContext";
+import { PauseContext } from "../contexts/PauseContext";
 
 const usePause = () => {
   const context = useContext(PauseContext);

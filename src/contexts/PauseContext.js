@@ -1,21 +1,26 @@
 import React, { createContext, useContext, useState } from "react";
-import { useDropTime } from "./useDropTime";
+import { useDropTime } from "../hooks/useDropTime";
 
 export const PauseContext = createContext();
 
-const {resumeDropTime} = useDropTime;
-
 export const PauseProvider = ({ children }) => {
+
   const [pause, setPause] = useState(false);
 
-  const togglePause = () =>  setPause((prev) => !prev)
+  const togglePause = () => {
+    setPause((prevPause) => {
+      const newPause = !prevPause;
+      return newPause;
+    });
+  };
 
   return (
-    <PauseContext.Provider value={{ pause, setPause, togglePause }}>
+    <PauseContext.Provider value={{ pause, setPause, togglePause}}>
       {children}
     </PauseContext.Provider>
   );
 };
+
 
 export const usePause = () => {
   const context = useContext(PauseContext);

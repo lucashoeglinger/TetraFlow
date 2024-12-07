@@ -7,7 +7,7 @@ import { useBoard } from "../hooks/useBoard";
 import { useGameStats } from "../hooks/useGameStats";
 import { usePlayer } from "../hooks/usePlayer";
 import { useLevel } from "../hooks/useLevel";
-import { usePause } from "../hooks/PauseContext";
+import { usePause } from "../contexts/PauseContext";
 
 const Tetris = ({ rows, columns, setGameOver }) => {
   const [gameStats, addLinesCleared] = useGameStats(useLevel.initialLevel);

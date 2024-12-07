@@ -1,5 +1,5 @@
 import React from "react";
-import { usePause } from "../hooks/PauseContext";
+import { usePause } from "../contexts/PauseContext";
 import { useDropTime } from "../hooks/useDropTime";
 
 const Pause = () => {
