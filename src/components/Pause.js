@@ -1,14 +1,21 @@
 import React from "react";
 import { usePause } from "../contexts/PauseContext";
-import { useDropTime } from "../hooks/useDropTime";
 
 const Pause = () => {
   const { togglePause } = usePause();
-  const [, , resumeDropTime] = useDropTime({});
 
   const handleResume = () => {
-    togglePause();
-    resumeDropTime({});
+    const event = new KeyboardEvent("keydown", {
+      key: "Escape",
+      code: "Escape",
+      keyCode: 27, 
+      charCode: 27,
+      bubbles: true, 
+    });
+    
+    document.dispatchEvent(event);
+
+    console.log(event)
   };
 
   return (
@@ -21,6 +28,7 @@ const Pause = () => {
         >
           Resume
         </button>
+        <h1 className="text-4x1 text-white mt-4">here is something to fix please press escape to continue</h1>
       </div>
     </div>
   );

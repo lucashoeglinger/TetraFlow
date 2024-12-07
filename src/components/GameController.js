@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Action, actionForKey, actionIsDrop } from "../utils/Input";
 import { playerController } from "../utils/PlayerController";
 
@@ -8,11 +8,8 @@ import usePause from "../hooks/usePause";
 
 const GameController = ({ board, gameStats, player, setGameOver, setPlayer }) => {
   const [dropTime, pauseDropTime, resumeDropTime] = useDropTime({ gameStats });
-  const { pause, setPause, togglePause } = usePause();
+  const { pause, togglePause } = usePause();
   const [isFastDropping, setIsFastDropping] = useState(false);
-
-
-  console.log(dropTime)
 
   useInterval(() => {
     if (!pause) {
@@ -41,9 +38,7 @@ const GameController = ({ board, gameStats, player, setGameOver, setPlayer }) =>
       return;
     }
 
-    if (pause) {
-      return;
-    }
+    if (pause) return;
 
     if (action === Action.Quit) {
       setGameOver(true);
@@ -52,9 +47,7 @@ const GameController = ({ board, gameStats, player, setGameOver, setPlayer }) =>
         pauseDropTime();
         setIsFastDropping(true);
       }
-      if (!dropTime) {
-        return;
-      }
+      if (!dropTime) return;
       handleInput({ action });
     }
   };
@@ -70,15 +63,19 @@ const GameController = ({ board, gameStats, player, setGameOver, setPlayer }) =>
     });
   };
 
-  return (
-    <input
-      className="GameController"
-      type="text"
-      onKeyDown={onKeyDown}
-      onKeyUp={onKeyUp}
-      autoFocus
-    />
-  );
+  useEffect(() => {
+    // Add global event listeners for keydown and keyup
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("keyup", onKeyUp);
+
+    // Cleanup event listeners on unmount
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("keyup", onKeyUp);
+    };
+  }, [onKeyDown, onKeyUp]);
+
+  return null; 
 };
 
 export default GameController;
