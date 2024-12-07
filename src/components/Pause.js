@@ -28,7 +28,6 @@ const Pause = () => {
         >
           Resume
         </button>
-        <h1 className="text-4x1 text-white mt-4">here is something to fix please press escape to continue</h1>
       </div>
     </div>
   );
