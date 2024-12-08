@@ -27,7 +27,7 @@ const Tetris = ({ rows, columns, setGameOver }) => {
         {/* Next Preview */}
         <div className="next-preview flex flex-col items-center">
           <h2 className="text-gray-200 text-xl mb-2">Next</h2>
-          <Previews tetrominoes={player.tetrominoes} />
+          <Previews className="Preview" tetrominoes={player.tetrominoes} />
         </div>
 
         {/* Game Board */}
