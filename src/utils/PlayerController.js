@@ -1,6 +1,7 @@
 import { hasCollision, isWithinBoard } from "./Board";
 import { rotate } from "./Tetrominoes";
 import { Action } from "./Input";
+import supabase from "../backend/createSupaClient";
 
 const attemptRotation = ({ board, player, setPlayer }) => {
   const shape = rotate({
@@ -53,7 +54,7 @@ export const movePlayer = ({ delta, position, shape, board }) => {
   return { collided: isHit, nextPosition };
 };
 
-const attemptMovement = ({ board, action, player, setPlayer, setGameOver }) => {
+const attemptMovement = async({ board, action, player, setPlayer, setGameOver }) => {
   const delta = { row: 0, column: 0 };
   let isFastDropping = false;
 
@@ -76,6 +77,17 @@ const attemptMovement = ({ board, action, player, setPlayer, setGameOver }) => {
 
   const isGameOver = collided && player.position.row === 0;
   if (isGameOver) {
+    console.log(supabase)
+    const { data, error } = await supabase
+                                .from('Highscores') 
+                                .select('*')
+                                .order('score', {ascending: false})
+
+    if (error) {
+      console.error('Error fetching data:', error);
+    } else {
+      console.log('Database result:', data);
+    }
     setGameOver(isGameOver);
   }
 
