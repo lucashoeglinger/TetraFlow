@@ -81,6 +81,7 @@ const attemptMovement = async({ board, action, player, setPlayer, setGameOver })
                                 .from('Highscores') 
                                 .select('*')
                                 .order('score', {ascending: false})
+                                .limit(10)
 
     if (error) {
       console.error('Error fetching data:', error);
