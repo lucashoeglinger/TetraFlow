@@ -77,7 +77,6 @@ const attemptMovement = async({ board, action, player, setPlayer, setGameOver })
 
   const isGameOver = collided && player.position.row === 0;
   if (isGameOver) {
-    console.log(supabase)
     const { data, error } = await supabase
                                 .from('Highscores') 
                                 .select('*')
@@ -85,9 +84,8 @@ const attemptMovement = async({ board, action, player, setPlayer, setGameOver })
 
     if (error) {
       console.error('Error fetching data:', error);
-    } else {
-      console.log('Database result:', data);
-    }
+    } 
+
     setGameOver(isGameOver);
   }
 
