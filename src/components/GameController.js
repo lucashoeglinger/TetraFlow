@@ -53,13 +53,17 @@ const GameController = ({ board, gameStats, player, setGameOver, setPlayer }) =>
   };
 
   const handleInput = ({ action }) => {
+    const points = gameStats.points;
+
     if (pause) return;
+
     playerController({
       action,
       board,
       player,
       setPlayer,
       setGameOver,
+      points,
     });
   };
 
