@@ -87,7 +87,7 @@ const attemptMovement = async({ board, action, player, setPlayer, setGameOver, s
   if (isGameOver) {
     const { data, error } = await supabase
                                 .from('Highscores') 
-                                .select('*')
+                                .select('score')
                                 .order('score', {ascending: false})
                                 .limit(10)
 
