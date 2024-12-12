@@ -4,6 +4,7 @@ import GameController from "./GameController";
 import GameStats from "./GameStats";
 import Previews from "./Previews";
 import { useBoard } from "../hooks/useBoard";
+import { useHighscore } from "../hooks/useHighscore";
 import { useGameStats } from "../hooks/useGameStats";
 import { usePlayer } from "../hooks/usePlayer";
 import { useLevel } from "../hooks/useLevel";
@@ -12,7 +13,7 @@ import { usePause } from "../contexts/PauseContext";
 const Tetris = ({ rows, columns, setGameOver }) => {
   const [gameStats, addLinesCleared] = useGameStats(useLevel.initialLevel);
   const [player, setPlayer, resetPlayer] = usePlayer();
-  const { pause } = usePause();
+  const [highscore, setHighscore, highscoreActive, setHighscoreActive] = useHighscore();
   const [board, setBoard] = useBoard({
     rows,
     columns,
@@ -20,7 +21,6 @@ const Tetris = ({ rows, columns, setGameOver }) => {
     resetPlayer,
     addLinesCleared,
   });
-
   return (
     <div className="Tetris h-screen w-full bg-gray-900 flex flex-col items-center justify-center">
       <div className="game-grid grid grid-cols-[1fr_3fr_1fr] gap-8 items-center w-full max-w-6xl">
@@ -50,6 +50,8 @@ const Tetris = ({ rows, columns, setGameOver }) => {
         gameStats={gameStats}
         player={player}
         setGameOver={setGameOver}
+        setHighscore={setHighscore}
+        setHighscoreActive={setHighscoreActive}
         setPlayer={setPlayer}
       />
     </div>

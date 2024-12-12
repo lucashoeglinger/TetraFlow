@@ -2,7 +2,7 @@ import useLevel from '../hooks/useLevel';
 import useZen from '../hooks/useZen';
 import { useState } from 'react';
 
-const Menu = ({ onClick }) => {
+const Menu = ({ onClick, onViewHighscore }) => {
   const [initialLevel, setInitialLevel] = useState(useLevel.initialLevel);
   const [expertLevel, setExpertLevel] = useState(useLevel.expertLevel);
 
@@ -35,6 +35,12 @@ const Menu = ({ onClick }) => {
             onClick={onClick}
           >
             New game
+          </button>
+          <button
+            className="w-full bg-gray-400 hover:bg-gray-300 text-gray-800 font-medium py-3 rounded-md text-lg mb-6"
+            onClick={onViewHighscore}
+          >
+           View Highscore
           </button>
 
           <div className="space-y-6">

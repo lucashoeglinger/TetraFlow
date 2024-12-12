@@ -54,7 +54,7 @@ export const movePlayer = ({ delta, position, shape, board }) => {
   return { collided: isHit, nextPosition };
 };
 
-const attemptMovement = async({ board, action, player, setPlayer, setGameOver, setHighscore, points }) => {
+const attemptMovement = async({ board, action, player, setPlayer, setGameOver, setHighscore, setHighscoreActive, points }) => {
   const delta = { row: 0, column: 0 };
   let isFastDropping = false;
 
@@ -69,8 +69,6 @@ const attemptMovement = async({ board, action, player, setPlayer, setGameOver, s
   }
 
   let currentPoints = 0;
-
-  console.log(points)
 
   if(points !== currentPoints){
     currentPoints = Math.max(points, currentPoints);
@@ -94,10 +92,18 @@ const attemptMovement = async({ board, action, player, setPlayer, setGameOver, s
     if (error) {
       console.error('Error fetching data:', error);
     } 
-    console.log(points)
-    if(points > data[data.length - 1].score){
-      console.log(true);
-    }
+    const lowestHighscore = data[data.length - 1]?.score || 0;
+
+    const isHighscore = points > lowestHighscore;
+
+            if (isHighscore) {
+              setHighscore((prev) => [
+                ...prev,
+                { name: "???", score: points },
+              ].sort((a, b) => b.score - a.score));
+              console.log(isHighscore)
+              setHighscoreActive(isHighscore); 
+            }
 
     setGameOver(isGameOver);
   }
@@ -117,6 +123,7 @@ export const playerController = ({
   setPlayer,
   setGameOver,
   setHighscore,
+  setHighscoreActive,
   points
 }) => {
   if (!action) return;
@@ -124,6 +131,6 @@ export const playerController = ({
   if (action === Action.Rotate) {
     attemptRotation({ board, player, setPlayer });
   } else {
-    attemptMovement({ board, player, setPlayer, action, setGameOver, setHighscore, points });
+    attemptMovement({ board, player, setPlayer, action, setGameOver, setHighscore, setHighscoreActive, points });
   }
 };

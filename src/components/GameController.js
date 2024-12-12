@@ -6,7 +6,7 @@ import { useDropTime } from "../hooks/useDropTime";
 import { useInterval } from "../hooks/useInterval";
 import usePause from "../hooks/usePause";
 
-const GameController = ({ board, gameStats, player, setGameOver, setPlayer }) => {
+const GameController = ({ board, gameStats, player, setGameOver, setHighscore, setHighscoreActive, setPlayer }) => {
   const [dropTime, pauseDropTime, resumeDropTime] = useDropTime({ gameStats });
   const { pause, togglePause } = usePause();
   const [isFastDropping, setIsFastDropping] = useState(false);
@@ -63,6 +63,8 @@ const GameController = ({ board, gameStats, player, setGameOver, setPlayer }) =>
       player,
       setPlayer,
       setGameOver,
+      setHighscore,
+      setHighscoreActive,
       points,
     });
   };
