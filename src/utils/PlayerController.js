@@ -3,6 +3,16 @@ import { rotate } from "./Tetrominoes";
 import { Action } from "./Input";
 import supabase from "../backend/createSupaClient";
 
+const { data, error } = await supabase
+                                .from('Highscores') 
+                                .select('score')
+                                .order('score', {ascending: false})
+                                .limit(10)
+
+    if (error) {
+      console.error('Error fetching data:', error);
+    } 
+
 const attemptRotation = ({ board, player, setPlayer }) => {
   const shape = rotate({
     piece: player.tetromino.shape,
@@ -83,15 +93,6 @@ const attemptMovement = async({ board, action, player, setPlayer, setGameOver, s
 
   const isGameOver = collided && player.position.row === 0;
   if (isGameOver) {
-    const { data, error } = await supabase
-                                .from('Highscores') 
-                                .select('score')
-                                .order('score', {ascending: false})
-                                .limit(10)
-
-    if (error) {
-      console.error('Error fetching data:', error);
-    } 
     const lowestHighscore = data[data.length - 1]?.score || 0;
 
     const isHighscore = points > lowestHighscore;

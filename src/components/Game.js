@@ -14,12 +14,13 @@ const Game = ({ rows, columns }) => {
 
   async function OnSave(name, score) {
     const {error} = await supabase
-                         .from("highscores")
+                         .from("Highscores")
                          .insert({name: name, score: score})
 
     if(error){
       console.error("Error inserting Highscores", error);
     }
+    setHighscoreActive(false)
   }
 
   const start = () => {
@@ -28,7 +29,7 @@ const Game = ({ rows, columns }) => {
     setHighscoreActive(false);
   };
 
-  const handleGameOver = (score) => {
+  const handleGameOver = () => {
     setGameOver(true);
   };
 
@@ -37,7 +38,7 @@ const Game = ({ rows, columns }) => {
       {pause && <Pause onResume={togglePause} />}
       {highscoreActive ? (
         <Highscore
-          highscore={highscore}
+          score={highscore}
           onRestart={start}
           onSave={OnSave}
           onBackToMenu={() => { setHighscoreActive(true)}}
