@@ -4,7 +4,7 @@ import GameController from "./GameController";
 import GameStats from "./GameStats";
 import Previews from "./Previews";
 import { useBoard } from "../hooks/useBoard";
-import { useHighscore } from "../hooks/useHighscore";
+import { useHighscore } from "../contexts/HighscoreContext";
 import { useGameStats } from "../hooks/useGameStats";
 import { usePlayer } from "../hooks/usePlayer";
 import { useLevel } from "../hooks/useLevel";
@@ -13,7 +13,7 @@ import { usePause } from "../contexts/PauseContext";
 const Tetris = ({ rows, columns, setGameOver }) => {
   const [gameStats, addLinesCleared] = useGameStats(useLevel.initialLevel);
   const [player, setPlayer, resetPlayer] = usePlayer();
-  const [highscore, setHighscore, highscoreActive, setHighscoreActive] = useHighscore();
+  const {highscore, setHighscore, highscoreActive, setHighscoreActive} = useHighscore();
   const [board, setBoard] = useBoard({
     rows,
     columns,

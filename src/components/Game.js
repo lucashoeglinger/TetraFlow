@@ -4,12 +4,23 @@ import Pause from "./Pause";
 import Highscore from "./Highscore";
 import { useGameOver } from "../hooks/useGameOver";
 import { usePause } from "../contexts/PauseContext";
-import { useHighscore } from "../hooks/useHighscore";
+import { useHighscore } from "../contexts/HighscoreContext";
+import supabase from "../backend/createSupaClient";
 
 const Game = ({ rows, columns }) => {
   const [gameOver, setGameOver, resetGameOver] = useGameOver();
   const { pause, setPause, togglePause } = usePause();
-  const [highscore, setHighscore, highscoreActive, setHighscoreActive] = useHighscore();
+  const {highscore, setHighscore, highscoreActive, setHighscoreActive} = useHighscore();
+
+  async function OnSave(name, score) {
+    const {error} = await supabase
+                         .from("highscores")
+                         .insert({name: name, score: score})
+
+    if(error){
+      console.error("Error inserting Highscores", error);
+    }
+  }
 
   const start = () => {
     resetGameOver();
@@ -21,8 +32,6 @@ const Game = ({ rows, columns }) => {
     setGameOver(true);
   };
 
-  console.log(highscoreActive)
-
   return (
     <div className="Game relative h-screen">
       {pause && <Pause onResume={togglePause} />}
@@ -30,6 +39,7 @@ const Game = ({ rows, columns }) => {
         <Highscore
           highscore={highscore}
           onRestart={start}
+          onSave={OnSave}
           onBackToMenu={() => { setHighscoreActive(true)}}
         />
       ) : gameOver ? (

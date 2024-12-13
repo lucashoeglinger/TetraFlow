@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useContext } from "react";
+import { HighscoreContext } from "../contexts/PauseContext";
 
-export const useHighscore = () => {
-    const [highscore, setHighscore] = useState([]);
-    const [highscoreActive, setHighscoreActive] = useState(false);
-
-    useEffect(() => {
-        console.log("highscore:", highscoreActive);
-      }, [highscoreActive])
-
-    return [highscore, setHighscore, highscoreActive, setHighscoreActive];
+const useHighscore = () => {
+  const context = useContext(HighscoreContext);
+  if (!context) {
+    throw new Error("usePause must be used within a PauseProvider");
+  }
+  return context;
 };
+
+export default useHighscore;

@@ -97,11 +97,8 @@ const attemptMovement = async({ board, action, player, setPlayer, setGameOver, s
     const isHighscore = points > lowestHighscore;
 
             if (isHighscore) {
-              setHighscore((prev) => [
-                ...prev,
-                { name: "???", score: points },
-              ].sort((a, b) => b.score - a.score));
-              console.log(isHighscore)
+              console.log(setHighscore)
+              setHighscore(points);
               setHighscoreActive(isHighscore); 
             }
 
