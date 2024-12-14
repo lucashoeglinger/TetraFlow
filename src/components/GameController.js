@@ -15,6 +15,7 @@ const GameController = ({ board, gameStats, player, setGameOver, setHighscore, s
   const {gyroData} = useGyroData();
   const lastFastDropRef = useRef(Date.now())
   const lastRotateRef = useRef(Date.now())
+  const lastHorizontalRef = useRef(Date.now())
 
   useInterval(() => {
     if (!pause) {
@@ -80,38 +81,45 @@ const GameController = ({ board, gameStats, player, setGameOver, setHighscore, s
     });
   };
 
-  const handleGyroscope = ({alpha, beta, gamma}) => {
-    if(pause) return;
+  const handleGyroscope = ({ alpha, beta, gamma }) => {
+    if (pause) return;
+  
     let gammaStart = 0;
     let betaStart = 0;
-    if(gyroData){
-       betaStart = gyroData.beta;
-       gammaStart = gyroData.gamma;
+    if (gyroData) {
+      betaStart = gyroData.beta;
+      gammaStart = gyroData.gamma;
     }
-    alert(gyroData.alpha, gyroData.beta)
     const tiltThreshhold = 15;
-
+  
     const now = Date.now();
-
-    if(gamma > gammaStart + tiltThreshhold){
-      handleInput({action: Action.Right});
-    }else if(gamma < gammaStart - tiltThreshhold){
-      handleInput({action: Action.Left})
-    }
-
-    if(beta > betaStart + tiltThreshhold){
-      if(now - lastFastDropRef.current >= 1000){
-        handleInput({action: Action.FastDrop})
-        lastFastDropRef.current = now;
-       }
-    }
-    if(beta < betaStart - tiltThreshhold){
-      if(now - lastRotateRef.current >= 500){
-        handleInput({action: Action.Rotate})
-        lastRotateRef.current = now
+  
+    if (gamma > gammaStart + tiltThreshhold) {
+      if(now - lastHorizontalRef.current >= 100){
+        handleInput({ action: Action.Right });
+        lastHorizontalRef.current = Date.now()
+      }
+    } else if (gamma < gammaStart - tiltThreshhold) {
+      if(now - lastHorizontalRef.current >= 100){
+        handleInput({ action: Action.Left });
+        lastHorizontalRef.current = Date.now();
       }
     }
-  }
+  
+    if (beta > betaStart + tiltThreshhold) {
+      if (now - lastFastDropRef.current >= 1000) {
+        handleInput({ action: Action.FastDrop });
+        lastFastDropRef.current = now;
+      }
+    }
+    if (beta < betaStart - tiltThreshhold) {
+      if (now - lastRotateRef.current >= 500) {
+        handleInput({ action: Action.Rotate });
+        lastRotateRef.current = now;
+      }
+    }
+  };
+  
   const handleDeviceOrientation = (event) => {
     const {alpha, beta, gamma} = event;
 
