@@ -8,21 +8,19 @@ const CalibrateDevice = ({onToMenu }) => {
     const calibrateDevice = (event) => {
         const {alpha, beta, gamma} = event;
 
-        console.log({alpha, beta, gamma})
-
         calibrateGyro(alpha, beta, gamma);
     }
     const calibrateGyro = (alpha, beta, gamma) => {
-        setGyroData({alpha: alpha, beta: beta, gamma: gamma});
-
-        alert("calibrated", gyroData);
+        setTimeout(() => {
+            setGyroData({alpha: alpha, beta: beta, gamma: gamma});
+        }, 1000);
     }
     const startCalibration = () => {
         if(typeof DeviceOrientationEvent.requestPermission === 'function'){
             DeviceOrientationEvent.requestPermission()
                                     .then((permission) => {
                                         if(permission === 'granted'){
-                                            document.addEventListener("deviceorientationevent", calibrateDevice);
+                                            window.addEventListener("deviceorientation", calibrateDevice);
                                             ta("Please hold your phone naturally it will get calibrated shortly");
                                         } else{
                                             ta("You denied us permission to use your gyroscope, why :(")
@@ -30,7 +28,7 @@ const CalibrateDevice = ({onToMenu }) => {
                                     })
         }else if('DeviceOrientationEvent' in window){
             ta("Permission was given automatically, glad you are not a apple device :)")
-            document.addEventListener("deviceorientation", calibrateDevice)
+            window.addEventListener("deviceorientation", calibrateDevice)
         } else{
             ta("You dont have a gyroscope, big L")
             console.log("no gyro")
