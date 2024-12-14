@@ -1,7 +1,11 @@
-import useGyroStats from "../hooks/useGyroStats";
+import { useGyroData } from "../contexts/GyroContext";
 
 const CalibrateDevice = ({onToMenu }) => {
-    const [gyroData, setGyroData] = useGyroStats();
+    const {gyroData, setGyroData} = useGyroData();
+
+    const round = (value, comma) => {
+        return Math.round(Math.pow(10,comma)*value)/Math.pow(10,comma);
+    }
     function ta(message){
         document.getElementById("ta").innerText = message;
     }
@@ -11,8 +15,11 @@ const CalibrateDevice = ({onToMenu }) => {
         calibrateGyro(alpha, beta, gamma);
     }
     const calibrateGyro = (alpha, beta, gamma) => {
+        const a = round(alpha, 1);
+        const b = round(beta, 1)
+        const g = round(gamma, 1)
         setTimeout(() => {
-            setGyroData({alpha: alpha, beta: beta, gamma: gamma});
+            setGyroData({alpha: a, beta: b, gamma: g});
         }, 1000);
     }
     const startCalibration = () => {

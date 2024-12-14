@@ -4,14 +4,15 @@ import { playerController } from "../utils/PlayerController";
 
 import { useDropTime } from "../hooks/useDropTime";
 import { useInterval } from "../hooks/useInterval";
+import { useGyroData } from "../contexts/GyroContext";
 import usePause from "../hooks/usePause";
-import {throttle, debounce, last} from "lodash";
 
 const GameController = ({ board, gameStats, player, setGameOver, setHighscore, setHighscoreActive, setPlayer }) => {
   const [dropTime, pauseDropTime, resumeDropTime] = useDropTime({ gameStats });
   const { pause, togglePause } = usePause();
   const [isFastDropping, setIsFastDropping] = useState(false);
   const [touchStart, setTouchStart] = useState({ x: 0, y: 0 });
+  const {gyroData} = useGyroData();
   const lastFastDropRef = useRef(Date.now())
   const lastRotateRef = useRef(Date.now())
 
@@ -81,25 +82,30 @@ const GameController = ({ board, gameStats, player, setGameOver, setHighscore, s
 
   const handleGyroscope = ({alpha, beta, gamma}) => {
     if(pause) return;
+    let gammaStart = 0;
+    let betaStart = 0;
+    if(gyroData){
+       betaStart = gyroData.beta;
+       gammaStart = gyroData.gamma;
+    }
+    alert(gyroData.alpha, gyroData.beta)
     const tiltThreshhold = 15;
-
-    const betaThreshold = 90;
 
     const now = Date.now();
 
-    if(gamma > tiltThreshhold){
+    if(gamma > gammaStart + tiltThreshhold){
       handleInput({action: Action.Right});
-    }else if(gamma < -tiltThreshhold){
+    }else if(gamma < gammaStart - tiltThreshhold){
       handleInput({action: Action.Left})
     }
 
-    if(beta > betaThreshold){
+    if(beta > betaStart + tiltThreshhold){
       if(now - lastFastDropRef.current >= 1000){
         handleInput({action: Action.FastDrop})
         lastFastDropRef.current = now;
        }
     }
-    if(beta < betaThreshold - tiltThreshhold * 2){
+    if(beta < betaStart - tiltThreshhold){
       if(now - lastRotateRef.current >= 500){
         handleInput({action: Action.Rotate})
         lastRotateRef.current = now
