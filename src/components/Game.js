@@ -5,12 +5,17 @@ import Highscore from "./Highscore";
 import { useGameOver } from "../hooks/useGameOver";
 import { usePause } from "../contexts/PauseContext";
 import { useHighscore } from "../contexts/HighscoreContext";
+import useGyroscope from "../hooks/useGyroscope";
+import CalibrateDevice from "./CalibrateDevice";
 import supabase from "../backend/createSupaClient";
 
 const Game = ({ rows, columns }) => {
   const [gameOver, setGameOver, resetGameOver] = useGameOver();
   const { pause, setPause, togglePause } = usePause();
+
   const {highscore, setHighscore, highscoreActive, setHighscoreActive} = useHighscore();
+
+  const [isCalibrate, setIsCalibrate] = useGyroscope();
 
   async function OnSave(name, score) {
     const {error} = await supabase
@@ -28,6 +33,12 @@ const Game = ({ rows, columns }) => {
     setPause(false);
     setHighscoreActive(false);
   };
+  const setGyro = () => {
+    setIsCalibrate(true);
+  }
+  const deactivateGyro = () => {
+    setIsCalibrate(false)
+  }
 
   const handleGameOver = () => {
     setGameOver(true);
@@ -36,6 +47,8 @@ const Game = ({ rows, columns }) => {
   return (
     <div className="Game relative h-screen">
       {pause && <Pause onResume={togglePause} />}
+      {isCalibrate && <CalibrateDevice
+                        onToMenu={deactivateGyro}></CalibrateDevice>}
       {highscoreActive ? (
         <Highscore
           score={highscore}
@@ -46,10 +59,7 @@ const Game = ({ rows, columns }) => {
       ) : gameOver ? (
         <Menu
           onClick={start}
-          onViewHighscore={() => {
-            setHighscoreActive(true)
-            console.log(true);
-          }}
+          onClickGyro={setGyro}
         />
       ) : (
         <Tetris rows={rows} columns={columns} setGameOver={handleGameOver} />
