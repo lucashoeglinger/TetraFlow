@@ -161,7 +161,7 @@ const GameController = ({ board, gameStats, player, setGameOver, setHighscore, s
            DeviceOrientationEvent.requestPermission()
                 .then((response) => {
                   if(response === 'granted'){
-                    document.addEventListener('deviceorientation', handleDeviceOrientation)
+                    window.addEventListener('deviceorientation', handleDeviceOrientation)
                   }
                 })
                 .catch(console.error);
