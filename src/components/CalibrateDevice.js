@@ -6,9 +6,6 @@ const CalibrateDevice = ({onToMenu }) => {
     const round = (value, comma) => {
         return Math.round(Math.pow(10,comma)*value)/Math.pow(10,comma);
     }
-    function ta(message){
-        document.getElementById("ta").innerText = message;
-    }
     const calibrateDevice = (event) => {
         const {alpha, beta, gamma} = event;
 
@@ -31,17 +28,10 @@ const CalibrateDevice = ({onToMenu }) => {
                                     .then((permission) => {
                                         if(permission === 'granted'){
                                             window.addEventListener("deviceorientation", calibrateDevice);
-                                            ta("Please hold your phone naturally it will get calibrated shortly");
-                                        } else{
-                                            ta("You denied us permission to use your gyroscope, why :(")
-                                        }
+                                        } 
                                     })
         }else if('DeviceOrientationEvent' in window){
-            ta("Permission was given automatically, glad you are not a apple device :)")
             window.addEventListener("deviceorientation", calibrateDevice)
-        } else{
-            ta("You dont have a gyroscope, big L")
-            console.log("no gyro")
         }
     }
 

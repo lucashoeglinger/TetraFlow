@@ -12,7 +12,7 @@ const GameController = ({ board, gameStats, player, setGameOver, setHighscore, s
   const { pause, togglePause } = usePause();
   const [isFastDropping, setIsFastDropping] = useState(false);
   const [touchStart, setTouchStart] = useState({ x: 0, y: 0 });
-  const {gyroData} = useGyroData();
+  const {gyroData, isEnabled} = useGyroData();
   const lastFastDropRef = useRef(Date.now())
   const lastRotateRef = useRef(Date.now())
   const lastHorizontalRef = useRef(Date.now())
@@ -171,19 +171,21 @@ const GameController = ({ board, gameStats, player, setGameOver, setHighscore, s
     document.addEventListener("touchmove", onTouchMove);
     document.addEventListener("touchend", onTouchEnd);
     document.addEventListener("click", handleClick);
-    if(typeof DeviceOrientationEvent.requestPermission === 'function' ){
-           DeviceOrientationEvent.requestPermission()
-                .then((response) => {
-                  if(response === 'granted'){
-                    window.addEventListener('deviceorientation', handleDeviceOrientation)
-                  }
-                })
-                .catch(console.error);
-    }else if ("DeviceOrientationEvent" in window) {
-      window.addEventListener("deviceorientation", handleDeviceOrientation);
-    } else {
-      console.error("Device orientation not supported on this device");
-    }
+    if(isEnabled){
+        if(typeof DeviceOrientationEvent.requestPermission === 'function' ){
+              DeviceOrientationEvent.requestPermission()
+                    .then((response) => {
+                      if(response === 'granted'){
+                        window.addEventListener('deviceorientation', handleDeviceOrientation)
+                      }
+                    })
+                    .catch(console.error);
+        }else if ("DeviceOrientationEvent" in window) {
+          window.addEventListener("deviceorientation", handleDeviceOrientation);
+        } else {
+          console.error("Device orientation not supported on this device");
+        }
+      }
 
     return () => {
       document.removeEventListener("keydown", onKeyDown);
@@ -192,7 +194,9 @@ const GameController = ({ board, gameStats, player, setGameOver, setHighscore, s
       document.removeEventListener("touchmove", onTouchMove);
       document.removeEventListener("touchend", onTouchEnd);
       document.removeEventListener("click", handleClick)
-      window.removeEventListener("deviceorientation", handleDeviceOrientation);
+      if(isEnabled){
+        window.removeEventListener("deviceorientation", handleDeviceOrientation);
+      }
     };
   }, [onKeyDown, onKeyUp]);
 
