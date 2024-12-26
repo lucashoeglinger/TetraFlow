@@ -1,7 +1,7 @@
 import { useGyroData } from "../contexts/GyroContext";
 
 const CalibrateDevice = ({onToMenu }) => {
-    const {gyroData, setGyroData} = useGyroData();
+    const {gyroData, setGyroData, isEnabled, setIsEnabled} = useGyroData();
 
     const round = (value, comma) => {
         return Math.round(Math.pow(10,comma)*value)/Math.pow(10,comma);
@@ -21,6 +21,9 @@ const CalibrateDevice = ({onToMenu }) => {
         setTimeout(() => {
             setGyroData({alpha: a, beta: b, gamma: g});
         }, 1000);
+    }
+    const enableGyroscope = () => {
+      setIsEnabled(!isEnabled);
     }
     const startCalibration = () => {
         if(typeof DeviceOrientationEvent.requestPermission === 'function'){
@@ -44,24 +47,22 @@ const CalibrateDevice = ({onToMenu }) => {
 
   return (
     <div className="Highscore absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-80 text-white">
-      <h1 className="text-3xl font-bold mb-4">Game Over</h1>
-      <textarea id="ta"  style={{
-            border: "1px solid orange",
-            backgroundColor: "#ffc",
-            padding: "0.5em",
-            borderLeftWidth: "0.5em",
-            fontFamily: '"Courier New", monospace',
-            fontSize: "0.8em",
-            margin: "0.5em 0px",
-            height: "10em",
-        }}>
-      </textarea>
+      <h1 className="text-3xl font-bold mb-4">Gyroscope</h1>
 
       <div className="flex flex-col items-center mb-4">
       </div>
+      <button className="bg-blue-500 hover:bg-blue-950 text-white font-bold py-2 px-4 rounded mt-4 mb-3"
+              onClick={enableGyroscope} >
+                Enable Gyroscope
+      </button>
       <button 
-      className="bg-blue-500 hover:bg-blue-950 text-white font-bold py-2 px-4 rounded mt-4 mb-3"
-      onClick={startCalibration}>
+      className={`text-white font-bold py-2 px-4 rounded mt-4 mb-3 ${
+        isEnabled
+          ? "bg-blue-500 hover:bg-blue-950"
+          : "bg-gray-400 cursor-not-allowed"
+      }`}
+      onClick={startCalibration}
+      disabled={!isEnabled}>
         Start Caliibration
       </button>
       <button

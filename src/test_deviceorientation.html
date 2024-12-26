@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="de">
+<head>
+	<meta charset="UTF-8">
+	<title>Device Orientation</title>
+	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+	<script>
+		function rnd(inp,prec) {
+			return Math.round(Math.pow(10,prec)*inp)/Math.pow(10,prec);
+		}
+		
+		function ta(msg,replace=false) {
+			replace ? document.querySelector("#console").innerText = msg : document.querySelector("#console").innerText+= msg+"\n";
+		}
+		
+		window.addEventListener("DOMContentLoaded",function() {
+			ta("Checking permission for DeviceOrientation");
+			
+			if(typeof DeviceOrientationEvent.requestPermission === 'function') {
+				/* iOS 13+ erfordert einen Permission Request */
+				const btn = document.querySelector("#reqPerm");
+				btn.classList.remove("H");
+				btn.addEventListener("click",function() {
+					/* Permissions müssen bei iOS mittels User Interaktion (zB. Click auf einen Button) erteilt werden */
+					ta("asking for permission");
+					DeviceOrientationEvent.requestPermission()
+						.then(permissionState => {
+							permissionState === 'granted' ? window.addEventListener('deviceorientation', lagebestimmung) : ta("No permission granted by user");
+						})
+						.catch((error) => {
+							ta("No permission granted due to an error");
+						});
+					});
+			}
+			else {
+				/* non iOS13+ Gerät */
+				ta("Permission given automatically");
+				window.addEventListener("deviceorientation", lagebestimmung, true);
+			}
+		});
+		
+		function lagebestimmung(lage) {
+			var alpha =  rnd(lage.alpha,1);
+			var beta = rnd(lage.beta,1);
+			var gamma =  rnd(lage.gamma,1);
+			document.querySelector("#alpha").value = alpha;
+			document.querySelector("#beta").value = beta;
+			document.querySelector("#gamma").value = gamma;
+			ta(lage.alpha+"\n"+lage.beta+"\n"+lage.gamma,true);
+		}
+	</script>
+	<style>
+		* {
+			box-sizing:border-box;
+		}
+		body {
+			font-family:Verdana, sans-serif;
+		}
+		label,
+		output {
+			display:block;
+		}
+		label {
+			font-size:0.8em;
+			text-transform:uppercase;
+			color:#666;
+		}
+		output {
+			margin-bottom:0.8em;
+			border:1px solid #ccc;
+			border-radius:0.2em;
+			padding:0.5em 1em;
+			width:100%;
+			font-size:1.5em
+		}
+		.ta {
+			border:1px solid orange;
+			background-color:#ffc;
+			padding:0.5em;
+			border-left-width:0.5em;
+			font-family:"Courier New",monospace;
+			font-size:0.8em;
+			margin:0.5em 0px;
+			width:100%;
+			height:10em;
+		}
+		
+		#reqPerm {
+			display:block;
+			width:fit-content;
+			padding:0.5em 1em;
+			border-radius:0.2em;
+			border:2px solid red;
+			color:red;
+			background:white;
+			margin:0.5em auto;
+		}
+		
+		.H {
+			display:none !important;
+		}
+	</style>
+</head>
+
+<body>
+	<textarea id="console" class="ta"></textarea>
+	<label>
+		Alpha: <output id="alpha"></output>
+	</label>
+	<label>
+		Beta: <output id="beta"></output>
+	</label>
+	<label>
+		Gamma: <output id="gamma"></output>
+	</label>
+	<button type="button" id="reqPerm" class="H">ask for Permission</button>
+</body>
+</html>
