@@ -20,6 +20,7 @@ const GameController = ({ board, gameStats, player, setGameOver, setHighscore, s
   useInterval(() => {
     if (!pause) {
       handleInput({ action: Action.SlowDrop });
+      resumeDropTime();
     }
   }, isFastDropping ? 50 : dropTime || Infinity);
 
@@ -165,27 +166,27 @@ const GameController = ({ board, gameStats, player, setGameOver, setHighscore, s
   };
 
   useEffect(() => {
-    document.addEventListener("keydown", onKeyDown);
-    document.addEventListener("keyup", onKeyUp);
-    document.addEventListener("touchstart", onTouchStart);
-    document.addEventListener("touchmove", onTouchMove);
-    document.addEventListener("touchend", onTouchEnd);
-    document.addEventListener("click", handleClick);
-    if(isEnabled){
-        if(typeof DeviceOrientationEvent.requestPermission === 'function' ){
-              DeviceOrientationEvent.requestPermission()
-                    .then((response) => {
-                      if(response === 'granted'){
-                        window.addEventListener('deviceorientation', handleDeviceOrientation)
-                      }
-                    })
-                    .catch(console.error);
-        }else if ("DeviceOrientationEvent" in window) {
-          window.addEventListener("deviceorientation", handleDeviceOrientation);
-        } else {
-          console.error("Device orientation not supported on this device");
+      document.addEventListener("keydown", onKeyDown);
+      document.addEventListener("keyup", onKeyUp);
+      document.addEventListener("touchstart", onTouchStart);
+      document.addEventListener("touchmove", onTouchMove);
+      document.addEventListener("touchend", onTouchEnd);
+      document.addEventListener("click", handleClick);
+      if(isEnabled){
+          if(typeof DeviceOrientationEvent.requestPermission === 'function' ){
+                DeviceOrientationEvent.requestPermission()
+                      .then((response) => {
+                        if(response === 'granted'){
+                          window.addEventListener('deviceorientation', handleDeviceOrientation)
+                        }
+                      })
+                      .catch(console.error);
+          }else if ("DeviceOrientationEvent" in window) {
+            window.addEventListener("deviceorientation", handleDeviceOrientation);
+          } else {
+            console.error("Device orientation not supported on this device");
+          }
         }
-      }
 
     return () => {
       document.removeEventListener("keydown", onKeyDown);
