@@ -7,14 +7,14 @@ import { GyroProvider } from "./contexts/GyroContext";
 
 export default function App() {
   return (
-    <div className="App">
-      <GyroProvider>
-        <HighscoreProvider>
-            <PauseProvider>
-              <Game rows={20} columns={10} />
-            </PauseProvider>
-          </HighscoreProvider>
-      </GyroProvider>
-    </div>
+      <div className="App">
+        <GyroProvider>
+          <HighscoreProvider>
+              <PauseProvider>
+                <Game rows={20} columns={10} />
+              </PauseProvider>
+            </HighscoreProvider>
+        </GyroProvider>
+      </div>
   );
 }

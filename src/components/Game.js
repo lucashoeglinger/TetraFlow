@@ -24,12 +24,18 @@ const Game = ({ rows, columns }) => {
     function updateOnlineState(){
       setIsOnline(navigator.onLine);
     }
-    window.addEventListener("online", updateOnlineState);
-    window.addEventListener("offline", updateOnlineState);
+    function onDeviceReady(){
+      document.addEventListener("online", updateOnlineState);
+      document.addEventListener("offline", updateOnlineState);
+      updateOnlineState();
+    }
+
+    document.addEventListener("deviceready", onDeviceReady);
 
     return () => {
-      window.addEventListener("online", updateOnlineState);
-      window.addEventListener("offline", updateOnlineState);
+      document.removeEventListener("online", updateOnlineState);
+      document.removeEventListener("offline", updateOnlineState);
+      document.removeEventListener("deviceready", onDeviceReady);
     }
   }, [])
 
@@ -64,14 +70,15 @@ const Game = ({ rows, columns }) => {
 
   return (
     <div className="Game relative h-screen">
-      {!isOnline && (
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded shadow-lg z-50">
-          You are offline. Please reconnect to fetch data.
-        </div>
-      )}
       {pause && <Pause onResume={togglePause} />}
       {isCalibrate && <CalibrateDevice
                         onToMenu={deactivateGyro}></CalibrateDevice>}
+      {!isOnline && (
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-red-500 text-white text-sm px-3 py-1 rounded shadow-md z-50">
+          You are offline, please reconnect to the internet in order to save your score.
+        </div>
+      )}
+
       {highscoreActive ? (
         <Highscore
           score={highscore}
