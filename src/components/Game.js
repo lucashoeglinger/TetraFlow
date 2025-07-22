@@ -6,6 +6,7 @@ import { useGameOver } from "../hooks/useGameOver";
 import { usePause } from "../contexts/PauseContext";
 import { useHighscore } from "../contexts/HighscoreContext";
 import useGyroscope from "../hooks/useGyroscope";
+import {useState, useEffect} from "react";
 import CalibrateDevice from "./CalibrateDevice";
 import supabase from "../backend/createSupaClient";
 
@@ -17,7 +18,24 @@ const Game = ({ rows, columns }) => {
 
   const [isCalibrate, setIsCalibrate] = useGyroscope();
 
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  useEffect(() =>  {
+    function updateOnlineState(){
+      setIsOnline(navigator.onLine);
+    }
+    window.addEventListener("online", updateOnlineState);
+    window.addEventListener("offline", updateOnlineState);
+
+    return () => {
+      window.addEventListener("online", updateOnlineState);
+      window.addEventListener("offline", updateOnlineState);
+    }
+  }, [])
+
   async function OnSave(name, score) {
+    if(!isOnline) return;
+    
     const {error} = await supabase
                          .from("Highscores")
                          .insert({name: name, score: score})
@@ -46,6 +64,11 @@ const Game = ({ rows, columns }) => {
 
   return (
     <div className="Game relative h-screen">
+      {!isOnline && (
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded shadow-lg z-50">
+          You are offline. Please reconnect to fetch data.
+        </div>
+      )}
       {pause && <Pause onResume={togglePause} />}
       {isCalibrate && <CalibrateDevice
                         onToMenu={deactivateGyro}></CalibrateDevice>}
