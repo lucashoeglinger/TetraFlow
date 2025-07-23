@@ -2,6 +2,7 @@ import { hasCollision, isWithinBoard } from "./Board";
 import { rotate } from "./Tetrominoes";
 import { Action } from "./Input";
 import supabase from "../backend/createSupaClient";
+import Sounds from "./Sounds";
 
 const { data, error } = await supabase
                                 .from('Highscores') 
@@ -93,6 +94,9 @@ const attemptMovement = async({ board, action, player, setPlayer, setGameOver, s
 
   const isGameOver = collided && player.position.row === 0;
   if (isGameOver) {
+    Sounds.gameOverMusic.play();
+    Sounds.tetrisMusic.stop();
+    
     const lowestHighscore = data[data.length - 1]?.score || 0;
 
     const isHighscore = points > lowestHighscore;

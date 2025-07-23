@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import Sounds from "../utils/Sounds";
 
 export const useGameStats = (initialLevel) => {
 
@@ -21,6 +22,10 @@ export const useGameStats = (initialLevel) => {
           ? previous.level + 1
           : previous.level;
       const linesCompleted = newLinesCompleted % linesPerLevel;
+
+      if(newLinesCompleted >= linesPerLevel){
+        Sounds.nextLevelMusic.play();
+      }
 
       return {
         level,

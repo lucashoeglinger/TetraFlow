@@ -1,4 +1,4 @@
-import React from "react";
+import {React, useEffect} from "react";
 import Board from "./Board";
 import GameController from "./GameController";
 import GameStats from "./GameStats";
@@ -9,6 +9,7 @@ import { useGameStats } from "../hooks/useGameStats";
 import { usePlayer } from "../hooks/usePlayer";
 import { useLevel } from "../hooks/useLevel";
 import { usePause } from "../contexts/PauseContext";
+import Sound from "../utils/Sounds";
 
 const Tetris = ({ rows, columns, setGameOver }) => {
   const [gameStats, addLinesCleared] = useGameStats(useLevel.initialLevel);
@@ -21,6 +22,24 @@ const Tetris = ({ rows, columns, setGameOver }) => {
     resetPlayer,
     addLinesCleared,
   });
+  
+  useEffect(() => {
+    const checkAndPlay = () => {
+      if (Sound.tetrisMusic.state() === "loaded") {
+        Sound.tetrisMusic.play();
+        clearInterval(interval);
+      }
+    };
+
+    const interval = setInterval(checkAndPlay, 100);
+
+    return () => {
+      clearInterval(interval);
+      Sound.tetrisMusic.stop(); 
+    };
+  }, []);
+
+
   return (
     <div className="Tetris h-screen w-full bg-gray-900 flex flex-col items-center justify-center">
       <div className="game-grid grid grid-cols-[1fr_3fr_1fr] gap-8 items-center w-full max-w-6xl">
