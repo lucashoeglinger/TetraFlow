@@ -6,6 +6,7 @@ import { useDropTime } from "../hooks/useDropTime";
 import { useInterval } from "../hooks/useInterval";
 import { useGyroData } from "../contexts/GyroContext";
 import usePause from "../hooks/usePause";
+import Sound from "../utils/Sounds";
 
 const GameController = ({ board, gameStats, player, setGameOver, setHighscore, setHighscoreActive, setPlayer }) => {
   const [dropTime, pauseDropTime, resumeDropTime] = useDropTime({ gameStats });
@@ -16,6 +17,12 @@ const GameController = ({ board, gameStats, player, setGameOver, setHighscore, s
   const lastFastDropRef = useRef(Date.now())
   const lastRotateRef = useRef(Date.now())
   const lastHorizontalRef = useRef(Date.now())
+
+  useEffect(() => {
+    return () => {
+      Sound.tetrisMusic.stop();
+    };
+  }, []);
 
   useInterval(() => {
     if (!pause) {

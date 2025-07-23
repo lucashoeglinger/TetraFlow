@@ -9,6 +9,7 @@ import useGyroscope from "../hooks/useGyroscope";
 import {useState, useEffect} from "react";
 import CalibrateDevice from "./CalibrateDevice";
 import supabase from "../backend/createSupaClient";
+import Sound from "../utils/Sounds";
 
 const Game = ({ rows, columns }) => {
   const [gameOver, setGameOver, resetGameOver] = useGameOver();
@@ -53,6 +54,9 @@ const Game = ({ rows, columns }) => {
   }
 
   const start = () => {
+    if (Sound.tetrisMusic.state() === "loaded" && !Sound.tetrisMusic.playing()) {
+      Sound.tetrisMusic.play();
+    }
     resetGameOver();
     setPause(false);
     setHighscoreActive(false);

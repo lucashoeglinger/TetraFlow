@@ -9,7 +9,6 @@ import { useGameStats } from "../hooks/useGameStats";
 import { usePlayer } from "../hooks/usePlayer";
 import { useLevel } from "../hooks/useLevel";
 import { usePause } from "../contexts/PauseContext";
-import Sound from "../utils/Sounds";
 
 const Tetris = ({ rows, columns, setGameOver }) => {
   const [gameStats, addLinesCleared] = useGameStats(useLevel.initialLevel);
@@ -22,22 +21,6 @@ const Tetris = ({ rows, columns, setGameOver }) => {
     resetPlayer,
     addLinesCleared,
   });
-  
-  useEffect(() => {
-    const checkAndPlay = () => {
-      if (Sound.tetrisMusic.state() === "loaded") {
-        Sound.tetrisMusic.play();
-        clearInterval(interval);
-      }
-    };
-
-    const interval = setInterval(checkAndPlay, 100);
-
-    return () => {
-      clearInterval(interval);
-      Sound.tetrisMusic.stop(); 
-    };
-  }, []);
 
 
   return (
