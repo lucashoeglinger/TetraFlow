@@ -25,9 +25,21 @@ const Game = ({ rows, columns }) => {
     function updateOnlineState(){
       setIsOnline(navigator.onLine);
     }
+    function onPause(){
+      if(Sound.tetrisMusic.playing()){
+        Sound.tetrisMusic.stop();
+      }
+    }
+    function onResume(){
+      if(!Sound.tetrisMusic.playing()){
+        Sound.tetrisMusic.play();
+      }
+    }
     function onDeviceReady(){
       document.addEventListener("online", updateOnlineState);
       document.addEventListener("offline", updateOnlineState);
+      document.addEventListener("pause", onPause);      
+      document.addEventListener("resume", onResume);      
       updateOnlineState();
     }
 
@@ -36,6 +48,8 @@ const Game = ({ rows, columns }) => {
     return () => {
       document.removeEventListener("online", updateOnlineState);
       document.removeEventListener("offline", updateOnlineState);
+      document.removeEventListener("pause", onPause);
+      document.removeEventListener("resume", onResume);
       document.removeEventListener("deviceready", onDeviceReady);
     }
   }, [])
