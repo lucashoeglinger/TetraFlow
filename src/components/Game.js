@@ -29,10 +29,14 @@ const Game = ({ rows, columns }) => {
       if(Sound.tetrisMusic.playing()){
         Sound.tetrisMusic.stop();
       }
+      setPause(true);
     }
     function onResume(){
       if(!Sound.tetrisMusic.playing()){
         Sound.tetrisMusic.play();
+      }
+      if(pause){
+        setPause(false);
       }
     }
     function onDeviceReady(){
