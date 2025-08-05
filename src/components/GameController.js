@@ -7,12 +7,14 @@ import { useInterval } from "../hooks/useInterval";
 import { useGyroData } from "../contexts/GyroContext";
 import usePause from "../hooks/usePause";
 import Sound from "../utils/Sounds";
+import { useIsOnline } from "../hooks/useIsOnline";
 
 const GameController = ({ board, gameStats, player, setGameOver, setHighscore, setHighscoreActive, setPlayer }) => {
   const [dropTime, pauseDropTime, resumeDropTime] = useDropTime({ gameStats });
   const { pause, togglePause } = usePause();
   const [isFastDropping, setIsFastDropping] = useState(false);
   const [touchStart, setTouchStart] = useState({ x: 0, y: 0 });
+  const isOnline = useIsOnline();
   const {gyroData, isEnabled} = useGyroData();
   const lastFastDropRef = useRef(Date.now())
   const lastRotateRef = useRef(Date.now())
@@ -86,6 +88,7 @@ const GameController = ({ board, gameStats, player, setGameOver, setHighscore, s
       setHighscore,
       setHighscoreActive,
       points,
+      isOnline
     });
   };
 

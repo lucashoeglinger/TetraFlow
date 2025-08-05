@@ -10,6 +10,7 @@ import {useState, useEffect} from "react";
 import CalibrateDevice from "./CalibrateDevice";
 import supabase from "../backend/createSupaClient";
 import Sound from "../utils/Sounds";
+import { useIsOnline } from "../hooks/useIsOnline";
 
 const Game = ({ rows, columns }) => {
   const [gameOver, setGameOver, resetGameOver] = useGameOver();
@@ -19,12 +20,9 @@ const Game = ({ rows, columns }) => {
 
   const [isCalibrate, setIsCalibrate] = useGyroscope();
 
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const isOnline = useIsOnline();
 
   useEffect(() =>  {
-    function updateOnlineState(){
-      setIsOnline(navigator.onLine);
-    }
     function onPause(){
       if(Sound.tetrisMusic.playing()){
         Sound.tetrisMusic.stop();
@@ -32,26 +30,21 @@ const Game = ({ rows, columns }) => {
       setPause(true);
     }
     function onResume(){
-      if(!Sound.tetrisMusic.playing()){
-        Sound.tetrisMusic.play();
-      }
-      if(pause){
-        setPause(false);
-      }
+      setTimeout(() => {
+        if(!Sound.tetrisMusic.playing()){
+          Sound.tetrisMusic.play();
+        }
+       setPause(false);    
+      }, 0);
     }
     function onDeviceReady(){
-      document.addEventListener("online", updateOnlineState);
-      document.addEventListener("offline", updateOnlineState);
-      document.addEventListener("pause", onPause);      
-      document.addEventListener("resume", onResume);      
-      updateOnlineState();
+      document.addEventListener("pause", onPause, false);      
+      document.addEventListener("resume", onResume, false);      
     }
 
     document.addEventListener("deviceready", onDeviceReady);
 
     return () => {
-      document.removeEventListener("online", updateOnlineState);
-      document.removeEventListener("offline", updateOnlineState);
       document.removeEventListener("pause", onPause);
       document.removeEventListener("resume", onResume);
       document.removeEventListener("deviceready", onDeviceReady);
@@ -59,16 +52,65 @@ const Game = ({ rows, columns }) => {
   }, [])
 
   async function OnSave(name, score) {
-    if(!isOnline) return;
-    
-    const {error} = await supabase
-                         .from("Highscores")
-                         .insert({name: name, score: score})
+    if(!isOnline){
+      var item = {
+        name: name,
+        score: score,
+      };
+      const key = `highscore-${Date.now()}`;
+      localStorage.setItem(key, JSON.stringify(item));
 
-    if(error){
-      console.error("Error inserting Highscores", error);
-    }
-    setHighscoreActive(false)
+
+      console.log(localStorage.getItem(0));
+
+      setHighscoreActive(false);
+    }else{
+    
+        const {error} = await supabase
+                             .from("Highscores")
+                             .insert({name: name, score: score})
+
+        if(error){
+          console.error("Error inserting Highscores", error);
+        }
+        setHighscoreActive(false)
+      }
+  }
+
+  async function syncDataToDatabase(){
+    for (let i = 0; i < localStorage.length ?? 0; i++) {
+        const raw = localStorage.getItem(localStorage.key(i));
+        if (!raw) continue;
+
+        let item;
+        try {
+          item = JSON.parse(raw);
+        } catch (e) {
+          console.warn(`Skipping malformed localStorage entry at index ${i}`);
+          continue;
+        }
+
+        const { data, error } = await supabase
+          .from("Highscores")
+          .select("score")
+          .order("score", { ascending: false })
+          .limit(10);
+        if(error){
+          console.log("error fetching data")
+        }
+
+        if(item.score < data.Highscore){
+          if (item?.name && typeof item.score === "number") {
+            const { error } = await supabase
+              .from("Highscores")
+              .insert({ name: item.name, score: item.score });
+          
+            if (error) {
+              console.error("Failed to sync item to Supabase", error.message);
+            }
+          }
+        }
+    }     
   }
 
   const start = () => {

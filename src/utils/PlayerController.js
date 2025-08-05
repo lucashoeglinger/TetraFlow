@@ -4,16 +4,6 @@ import { Action } from "./Input";
 import supabase from "../backend/createSupaClient";
 import Sounds from "./Sounds";
 
-const { data, error } = await supabase
-                                .from('Highscores') 
-                                .select('score')
-                                .order('score', {ascending: false})
-                                .limit(10)
-
-    if (error) {
-      console.error('Error fetching data:', error);
-    } 
-
 const attemptRotation = ({ board, player, setPlayer }) => {
   const shape = rotate({
     piece: player.tetromino.shape,
@@ -65,7 +55,7 @@ export const movePlayer = ({ delta, position, shape, board }) => {
   return { collided: isHit, nextPosition };
 };
 
-const attemptMovement = async({ board, action, player, setPlayer, setGameOver, setHighscore, setHighscoreActive, points }) => {
+const attemptMovement = async({ board, action, player, setPlayer, setGameOver, setHighscore, setHighscoreActive, points, isOnline }) => {
   const delta = { row: 0, column: 0 };
   let isFastDropping = false;
 
@@ -93,23 +83,44 @@ const attemptMovement = async({ board, action, player, setPlayer, setGameOver, s
   });
 
   const isGameOver = collided && player.position.row === 0;
-  if (isGameOver) {
+    if (isGameOver) {
     Sounds.gameOverMusic.play();
     Sounds.tetrisMusic.stop();
-    
-    const lowestHighscore = data[data.length - 1]?.score || 0;
 
-    const isHighscore = points > lowestHighscore;
+    let lowestHighscore = 0;
 
-            if (isHighscore) {
-              console.log(setHighscore)
-              setHighscore(points);
-              setHighscoreActive(isHighscore); 
-            }
+    if (isOnline) {
+      try {
+        const { data, error } = await supabase
+          .from("Highscores")
+          .select("score")
+          .order("score", { ascending: false })
+          .limit(10);
 
-    setGameOver(isGameOver);
+        if (error) {
+          console.error("Error fetching Highscores:", error);
+        } else {
+          lowestHighscore = data?.[data.length - 1]?.score ?? 0;
+        }
+      } catch (err) {
+        console.error("Unexpected error fetching highscores:", err);
+      }
+    }
+    let isHighscore = false;
+
+    if(isOnline){
+      isHighscore = points > lowestHighscore;
+    }else{
+      isHighscore = true;
+    }
+
+    if (isHighscore) {
+      setHighscore(points);
+      setHighscoreActive(true);
+    }
+
+    setGameOver(true);
   }
-
   setPlayer({
     ...player,
     collided,
@@ -126,13 +137,14 @@ export const playerController = ({
   setGameOver,
   setHighscore,
   setHighscoreActive,
-  points
+  points,
+  isOnline
 }) => {
   if (!action) return;
 
   if (action === Action.Rotate) {
     attemptRotation({ board, player, setPlayer });
   } else {
-    attemptMovement({ board, player, setPlayer, action, setGameOver, setHighscore, setHighscoreActive, points });
+    attemptMovement({ board, player, setPlayer, action, setGameOver, setHighscore, setHighscoreActive, points, isOnline });
   }
 };

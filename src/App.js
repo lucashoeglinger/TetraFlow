@@ -4,6 +4,7 @@ import Game from ".//components/Game";
 import { PauseProvider } from "./contexts/PauseContext";
 import { HighscoreProvider } from "./contexts/HighscoreContext";
 import { GyroProvider } from "./contexts/GyroContext";
+import { useIsOnline } from "./hooks/useIsOnline";
 
 export default function App() {
   return (
