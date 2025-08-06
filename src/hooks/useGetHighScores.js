@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import supabase from "../backend/createSupaClient";
-import { useIsOnline } from "./useIsOnline";
+import { useIsOnline } from "../contexts/OnlineStatusContext";
 
 export function useGetHighscores() {
     const [highscores, setHighscores] = useState([]);

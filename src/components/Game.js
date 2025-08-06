@@ -10,7 +10,7 @@ import {useState, useEffect} from "react";
 import CalibrateDevice from "./CalibrateDevice";
 import supabase from "../backend/createSupaClient";
 import Sound from "../utils/Sounds";
-import { useIsOnline } from "../hooks/useIsOnline";
+import { useIsOnline, useSetIsOnline } from "../contexts/OnlineStatusContext";
 
 const Game = ({ rows, columns }) => {
   const [gameOver, setGameOver, resetGameOver] = useGameOver();
@@ -21,6 +21,7 @@ const Game = ({ rows, columns }) => {
   const [isCalibrate, setIsCalibrate] = useGyroscope();
 
   const isOnline = useIsOnline();
+  const setIsOnline = useSetIsOnline();
 
   useEffect(() =>  {
     function onPause(){
@@ -37,9 +38,19 @@ const Game = ({ rows, columns }) => {
        setPause(false);    
       }, 0);
     }
+    const updateOnlineState = () => {
+        const online = navigator.onLine;
+        setIsOnline(online);
+        console.log("Network status changed:", online);
+        if (online) {
+          syncDataToDatabase();
+        }
+    };
     function onDeviceReady(){
       document.addEventListener("pause", onPause, false);      
-      document.addEventListener("resume", onResume, false);      
+      document.addEventListener("resume", onResume, false); 
+      document.addEventListener("online", updateOnlineState);
+      document.addEventListener("offline", updateOnlineState);     
     }
 
     document.addEventListener("deviceready", onDeviceReady);
@@ -47,6 +58,8 @@ const Game = ({ rows, columns }) => {
     return () => {
       document.removeEventListener("pause", onPause);
       document.removeEventListener("resume", onResume);
+      document.removeEventListener("online", updateOnlineState);
+      document.removeEventListener("offline", updateOnlineState);   
       document.removeEventListener("deviceready", onDeviceReady);
     }
   }, [])
