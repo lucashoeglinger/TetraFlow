@@ -60,9 +60,6 @@ const Game = ({ rows, columns }) => {
       const key = `highscore-${Date.now()}`;
       localStorage.setItem(key, JSON.stringify(item));
 
-
-      console.log(localStorage.getItem(0));
-
       setHighscoreActive(false);
     }else{
     
