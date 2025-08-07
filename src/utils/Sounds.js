@@ -5,12 +5,12 @@ import nextLevel from "../sound/next-level.mp3";
 
 let gameOverMusic = new Howl({
     src: [gameOver],
-    volume: 0.7
+    volume: 0.5
 });
 
 let nextLevelMusic = new Howl({
     src: [nextLevel],
-    volume: 4
+    volume: 0.8
 });
 
 const tetrisMusic = new Howl({
