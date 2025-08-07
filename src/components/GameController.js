@@ -67,12 +67,6 @@ const GameController = ({ board, gameStats, player, setGameOver, setHighscore, s
       handleInput({ action });
     }
   };
-  const handleClick = (event) => {
-    if(!event.target.closest("BoardCell") || !event.target){
-      return;
-    }
-    handleInput({action: Action.FastDrop})
-  }
 
   const handleInput = ({ action }) => {
     const points = gameStats.points;
@@ -130,6 +124,9 @@ const GameController = ({ board, gameStats, player, setGameOver, setHighscore, s
       }
     }
   };
+  function handleDblClick(){
+    handleInput({action: Action.FastDrop});
+  }
   
   const handleDeviceOrientation = (event) => {
     const {alpha, beta, gamma} = event;
@@ -181,7 +178,7 @@ const GameController = ({ board, gameStats, player, setGameOver, setHighscore, s
       document.addEventListener("touchstart", onTouchStart);
       document.addEventListener("touchmove", onTouchMove);
       document.addEventListener("touchend", onTouchEnd);
-      document.addEventListener("click", handleClick);
+      document.addEventListener("dblclick", handleDblClick);
       if(isEnabled){
           if(typeof DeviceOrientationEvent.requestPermission === 'function' ){
                 DeviceOrientationEvent.requestPermission()
@@ -204,7 +201,7 @@ const GameController = ({ board, gameStats, player, setGameOver, setHighscore, s
       document.removeEventListener("touchstart", onTouchStart);
       document.removeEventListener("touchmove", onTouchMove);
       document.removeEventListener("touchend", onTouchEnd);
-      document.removeEventListener("click", handleClick)
+      document.removeEventListener("dblclick", handleDblClick);
       if(isEnabled){
         window.removeEventListener("deviceorientation", handleDeviceOrientation);
       }
