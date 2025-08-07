@@ -41,7 +41,6 @@ const Game = ({ rows, columns }) => {
     const updateOnlineState = () => {
         const online = navigator.onLine;
         setIsOnline(online);
-        console.log("Network status changed:", online);
         if (online) {
           syncDataToDatabase();
         }
@@ -87,41 +86,50 @@ const Game = ({ rows, columns }) => {
       }
   }
 
-  async function syncDataToDatabase(){
-    for (let i = 0; i < localStorage.length ?? 0; i++) {
-        const raw = localStorage.getItem(localStorage.key(i));
-        if (!raw) continue;
+  async function syncDataToDatabase() {
+    const keys = Object.keys(localStorage);
+    for (const key of keys) {
+      const raw = localStorage.getItem(key);
+      if (!raw) continue;
 
-        let item;
-        try {
-          item = JSON.parse(raw);
-        } catch (e) {
-          console.warn(`Skipping malformed localStorage entry at index ${i}`);
-          continue;
-        }
+      let item;
+      try {
+        item = JSON.parse(raw);
+      } catch (e) {
+        alert(`Skipping malformed localStorage entry at key: ${key}`);
+        continue;
+      }
 
-        const { data, error } = await supabase
-          .from("Highscores")
-          .select("score")
-          .order("score", { ascending: false })
-          .limit(10);
-        if(error){
-          console.log("error fetching data")
-        }
+      const { data, error } = await supabase
+        .from("Highscores")
+        .select("score")
+        .order("score", { ascending: false })
+        .limit(10);
 
-        if(item.score < data.Highscore){
-          if (item?.name && typeof item.score === "number") {
-            const { error } = await supabase
-              .from("Highscores")
-              .insert({ name: item.name, score: item.score });
-          
-            if (error) {
-              console.error("Failed to sync item to Supabase", error.message);
-            }
+      if (error) {
+        alert("Error fetching data");
+        continue;
+      }
+
+      if (item?.name && typeof item.score === "number") {
+        const lowestHighscore = data?.[data.length - 1]?.score ?? 0;
+        if (item.score > lowestHighscore) {
+          const { error: insertError } = await supabase
+            .from("Highscores")
+            .insert({ name: item.name, score: item.score });
+
+          if (insertError) {
+            console.log("Failed to sync item to Supabase: " + insertError.message);
+          } else {
+            localStorage.removeItem(key);
           }
+        }else{
+          localStorage.removeItem(key);
         }
-    }     
+      }
+    }
   }
+
 
   const start = () => {
     if (Sound.tetrisMusic.state() === "loaded" && !Sound.tetrisMusic.playing()) {
