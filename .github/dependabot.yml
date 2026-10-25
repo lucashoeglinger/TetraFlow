@@ -1,20 +1,31 @@
-# .github/dependabot.yml
 version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 3
+    labels:
+      - "dependencies"
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+      include: "scope"
     groups:
-      all-minor-patch:
+      security:
+        applies-to: "security-updates"
+        patterns:
+          - "*"
+      minor-and-patch:
+        applies-to: "version-updates"
         patterns:
           - "*"
         update-types:
           - "minor"
           - "patch"
-
-  - package-ecosystem: "github-actions"
-    directory: "/.github/workflows"
-    schedule:
-      interval: "weekly"   
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"   
